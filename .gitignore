@@ -1,0 +1,8 @@
+*.log
+
+# backend
+hero-backend/target/
+
+# frontend
+hero-frontend/node_modules/
+hero-frontend/dist/

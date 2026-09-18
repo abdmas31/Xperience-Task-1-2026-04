@@ -1,35 +1,29 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useEffect, useState } from 'react'
 import './App.css'
+import HostHome from './components/HostHome'
+import EventDashboard from './components/EventDashboard'
+import RsvpPage from './components/RsvpPage'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [path, setPath] = useState(window.location.pathname)
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+  useEffect(() => {
+    const onPopState = () => setPath(window.location.pathname)
+    window.addEventListener('popstate', onPopState)
+    return () => window.removeEventListener('popstate', onPopState)
+  }, [])
+
+  const rsvpMatch = path.match(/^\/rsvp\/([^/]+)\/?$/)
+  if (rsvpMatch) {
+    return <RsvpPage token={rsvpMatch[1]} />
+  }
+
+  const hostMatch = path.match(/^\/host\/([^/]+)\/?$/)
+  if (hostMatch) {
+    return <EventDashboard eventId={hostMatch[1]} />
+  }
+
+  return <HostHome />
 }
 
 export default App
